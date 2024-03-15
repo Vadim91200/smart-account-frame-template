@@ -4,7 +4,8 @@ import { privateKeyToSafeSmartAccount } from 'permissionless/accounts';
 import { createPimlicoPaymasterClient } from 'permissionless/clients/pimlico';
 import { Address, Hash, createPublicClient, http } from 'viem';
 
-const privateKey = process.env.PRIVATE_KEY!;
+const eprivateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY!;
+const privateKey = '0x' + eprivateKey;
 const apiKey = process.env.PIMLICO_API_KEY!;
 const paymasterUrl = `https://api.pimlico.io/v2/sepolia/rpc?apikey=${apiKey}`
 const bundlerUrl = `https://api.pimlico.io/v1/sepolia/rpc?apikey=${apiKey}`
@@ -20,23 +21,16 @@ const paymasterClient = createPimlicoPaymasterClient({
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
     const body: FrameRequest = await req.json();
-    const { isValid, message } = await getFrameMessage(body, { neynarApiKey: process.env.NEYNAR_API_KEY! });
+    const fid = process.env.NEXT_PUBLIC_MYFID;
 
-    if (isValid === false) {
-        return new NextResponse('Invalid Frame message', { status: 400 });
+    if (!fid) {
+        return new NextResponse('Invalid Frame id', { status: 400 });
     }
-
-    if (!message) {
-        return new NextResponse('Invalid Frame message', { status: 400 });
-    }
-
-    const accountAddress = message.interactor.verified_accounts[0] as Address;
-
     const account = await privateKeyToSafeSmartAccount(publicClient, {
         privateKey: privateKey as Hash,
         safeVersion: "1.4.1", // simple version
         entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789", // global entrypoint
-        saltNonce: BigInt(message.interactor.fid)
+        saltNonce: BigInt(fid)
     })
 
     return NextResponse.redirect(
