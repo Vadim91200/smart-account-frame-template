@@ -19,10 +19,10 @@ const apiKey = process.env.NEXT_PUBLIC_PIMLICO_API_KEY!;
 
 const paymasterUrl = `https://api.pimlico.io/v2/sepolia/rpc?apikey=${apiKey}`
 const bundlerUrl = `https://api.pimlico.io/v1/sepolia/rpc?apikey=${apiKey}`
-const nodeUrl = `https://mainnet.infura.io/v3/${INFURA_API_KEY}`
+const nodeUrl = `https://sepolia.infura.io/v3/${INFURA_API_KEY}`
 
 const publicClient = createPublicClient({
-	transport: http("https://rpc.ankr.com/eth_sepolia"),
+	transport: http(nodeUrl),
 })
  
 const paymasterClient = createPimlicoPaymasterClient({
