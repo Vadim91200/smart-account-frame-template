@@ -20,11 +20,13 @@ export const parseFrameRequest = async (request: FrameRequest) => {
         const result = await hub.validateMessage(decodedMessage);
         if (!result.isOk() || !result.value.valid || !result.value.message) {
             isValid = false;
+            console.log("this is the false result", result);
         } else {
             fid = result.value.message.data?.fid;
+            console.log("this is the good result", result);
         }
     } catch (error) {
-        console.error(error)
+        console.error("this is the error", error)
     }
 
     return {fid: fid, isValid: isValid};

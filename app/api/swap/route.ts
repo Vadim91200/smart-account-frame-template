@@ -6,7 +6,6 @@ import { bundlerActions, createSmartAccountClient } from 'permissionless';
 import { pimlicoBundlerActions } from 'permissionless/actions/pimlico';
 import { createPimlicoPaymasterClient } from 'permissionless/clients/pimlico';
 import { sepolia } from 'viem/chains';
-//import { abi } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json';
 import { abi } from '@uniswap/swap-router-contracts/artifacts/contracts/interfaces/ISwapRouter02.sol/ISwapRouter02.json'
 
 const UNISWAP_ROUTER_ADDRESS = '0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E';
@@ -38,7 +37,6 @@ async function createUniswapTransaction(web3: Web3, address: Address, amountInET
     const amountIn = ethers.parseEther(amountInETH.toString());
     const amountOut = ethers.parseEther(amountOutMin.toString());
     const path = [ETH_ADDRESS, PEPE_ADDRESS];
-    //const deadline = Math.floor(Date.now() / 1000) + 60 * 20; 
 
     const data = await uniswapRouter.methods.swapExactTokensForTokens(
         amountIn,

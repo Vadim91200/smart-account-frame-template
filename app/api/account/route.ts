@@ -78,7 +78,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     <meta property="fc:frame:button:1:action" content="link" />
     <meta property="fc:frame:button:1:target" content="https://sepolia.etherscan.io/address/${account.address}" />
     <meta property="fc:frame:button:2" content="Buy Ape" />
-    <meta property="fc:frame:button:2:action" content="post_redirect" />
+    <meta property="fc:frame:button:2:action" content="post" />
     <meta property="fc:frame:post_url" content="${NEXT_PUBLIC_URL}/api/swap" />
   </head></html>`);
     
