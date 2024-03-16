@@ -70,18 +70,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
     })
 
-    return new NextResponse(
-        getFrameHtmlResponse({
-            buttons: [
-                {
-                    label: `View Smart Account`,
-                    action: "post_redirect"
-                },
-            ],
-            image: `${NEXT_PUBLIC_URL}/api/og?address=${account.address}&fid=${fid}&userOpHash=${userOpHash}`,
-            post_url: `${NEXT_PUBLIC_URL}/api/etherscan`,
-        }),
-    );
+    return new NextResponse(`<!DOCTYPE html><html><head>
+    <title>Account created</title>
+    <meta property="fc:frame" content="vNext" />
+    <meta property="fc:frame:image" content="${NEXT_PUBLIC_URL}/api/og?address=${account.address}&fid=${fid}&userOpHash=${userOpHash}" />
+    <meta property="fc:frame:button:1" content="View Smart Account" />
+    <meta property="fc:frame:button:1:action" content="link" />
+    <meta property="fc:frame:button:1:target" content="https://sepolia.etherscan.io/address/${account.address}" />
+    <meta property="fc:frame:button:2" content="Buy Ape" />
+    <meta property="fc:frame:button:2:action" content="post_redirect" />
+    <meta property="fc:frame:post_url" content="${NEXT_PUBLIC_URL}/api/swap" />
+  </head></html>`);
     
 
 
