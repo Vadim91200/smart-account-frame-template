@@ -38,13 +38,13 @@ async function createUniswapTransaction(web3: Web3, address: Address, amountInET
     const amountIn = ethers.parseEther(amountInETH.toString());
     const amountOut = ethers.parseEther(amountOutMin.toString());
     const path = [ETH_ADDRESS, PEPE_ADDRESS];
-    const deadline = Math.floor(Date.now() / 1000) + 60 * 20; 
+    //const deadline = Math.floor(Date.now() / 1000) + 60 * 20; 
 
     const data = await uniswapRouter.methods.swapExactTokensForTokens(
+        amountIn,
         amountOut,
         path,
         address,
-        deadline,
         { value: amountIn }
     );
 
