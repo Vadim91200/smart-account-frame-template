@@ -1,14 +1,25 @@
 import { FrameRequest } from "@coinbase/onchainkit";
-import { createPublicClient, getContract, http } from "viem";
-import { optimism } from "viem/chains";
-import { getSSLHubRpcClient, Message } from '@farcaster/hub-nodejs';
 
-export const FRAME_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://privy-frames-demo.vercel.app';
+
+const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL;
 const ID_REGISTRY_CONTRACT_ADDRESS: `0x${string}` = '0x00000000fc6c5f01fc30151999387bb99a9f489b'; // Optimism Mainnet
 const ZERO_ADDRESS: `0x${string}` = '0x0000000000000000000000000000000000000000';
 const HUB_URL = 'nemes.farcaster.xyz:2283';
-
-export const parseFrameRequest = async (request: FrameRequest) => {
+export const createFrame = (imageUrl: string, buttonText: string, apiPath: string, isRedirect = false) => {
+    console.log("tout vas bien", imageUrl, buttonText, apiPath, isRedirect);
+      return (`
+        <!DOCTYPE html>
+        <html>
+            <head>
+            <meta name="fc:frame" content="vNext">
+            <meta name="fc:frame:image" content="${NEXT_PUBLIC_URL}/${imageUrl}">
+            <meta name="fc:frame:post_url" content="${NEXT_PUBLIC_URL}/${apiPath}">
+            <meta name="fc:frame:button:1" content="${buttonText}">
+            <meta name="fc:frame:button:1:action" content="${isRedirect ? 'post_redirect' : 'post'}">
+            </head>
+        </html>`);
+  }
+/* export const parseFrameRequest = async (request: FrameRequest) => {
     const hub = getSSLHubRpcClient(HUB_URL);
     let fid: number | undefined;
     let isValid: boolean = true;
@@ -30,4 +41,4 @@ export const parseFrameRequest = async (request: FrameRequest) => {
     }
 
     return {fid: fid, isValid: isValid};
-}
+} */

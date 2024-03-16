@@ -1,5 +1,3 @@
-import { NEXT_PUBLIC_URL } from '@/app/config';
-import { parseFrameRequest } from '../../../../lib/farcaster';
 import { FrameRequest, getFrameHtmlResponse } from '@coinbase/onchainkit';
 import { NextRequest, NextResponse } from 'next/server';
 import { bundlerActions, createSmartAccountClient } from 'permissionless';
@@ -9,7 +7,7 @@ import { createPimlicoPaymasterClient } from 'permissionless/clients/pimlico';
 import { Address, createPublicClient, http } from 'viem';
 import { arbitrumSepolia, baseSepolia } from 'viem/chains';
 
-
+const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL;
 const eprivateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY!;
 const privateKey = '0x' + eprivateKey;
 const apiKey = process.env.NEXT_PUBLIC_PIMLICO_API_KEY!;
