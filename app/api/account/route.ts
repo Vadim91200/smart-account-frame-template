@@ -65,7 +65,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   return new NextResponse(`<!DOCTYPE html><html><head>
     <title>Account created</title>
     <meta property="fc:frame" content="vNext" />
-    <meta property="fc:frame:image" content="${NEXT_PUBLIC_URL}/api/og?address=${safeAccount.address}&fid=${fid}&userOpHash=${userOpHash}" />
+    <meta property="fc:frame:image" content="${NEXT_PUBLIC_URL}/api/og?address=${safeAccount.address}&fid=${fid}&userOpHash=${txHash}" />
     <meta property="fc:frame:button:1" content="View Smart Account" />
     <meta property="fc:frame:button:1:action" content="link" />
     <meta property="fc:frame:button:1:target" content="https://sepolia.etherscan.io/address/${safeAccount.address}" />
@@ -77,6 +77,5 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
 export const dynamic = "force-dynamic";
 function parseEther(arg0: string): bigint | undefined {
-    throw new Error("Function not implemented.");
+  throw new Error("Function not implemented.");
 }
-
