@@ -9,10 +9,11 @@ Or you can generate a frame for any address on base and arbitrum with the format
 AAFrame is a cutting-edge developer tool designed to facilitate the seamless integration of Account Abstraction into Farcaster and Warpcast Frames. This tool enables developers to embed direct blockchain functionalities such as token sending, swapping, and NFT minting right within social media platforms. AAFrame is built for developers aiming to bridge the gap between blockchain technology and social media user experiences, making blockchain interactions intuitive and integrated within the Warpcast app ecosystem.
 
 ## Key Features
-- **Effortless Account Abstraction**: Streamline the integration of blockchain capabilities into your social media applications with minimal setup.
+- **Effortless Account Abstraction**: Streamline the integration of blockchain capabilities into a Farcaster Frame with the Safe 4337 Module.
 - **Direct On-Feed Blockchain Interactions**: Enable users to perform blockchain transactions directly within their social media feeds, enhancing engagement and interaction.
 - **Developer-Friendly Setup**: With just an image, an address, and a network, you can create engaging and functional frames for a wide range of blockchain activities.
 - **Scalable and Future-Proof**: Designed with scalability in mind, AAFrame is ready for future expansions, including automatic generation of blockchain interaction codes and more advanced features for user transactions without traditional wallet dependencies.
+- **One to rule them all**: With FarcasterID integration, our solution could abstract accounts and transaction on any frame using our service.
 
 ## Technologies Utilized
 - **Blockchain Integration Modules**: Safe 4337 Module, Safe accounts v1.4.1, Safe SDK, and Protocol Kit.
@@ -27,6 +28,35 @@ To leverage AAFrame for your Farcaster Frames projects, follow these steps:
 2. Refer to the `docs` directory for detailed AAFrame integration instructions.
 3. Utilize the provided React components and TypeScript utilities for Frame development.
 4. Test your Frame within Warpcast to ensure a flawless user experience.
+
+## Account abstraction with Farcaster ID
+**In the mongo branch**:
+
+- **1.** We parse the FrameRequest by accessing it's trusted data thanks to a Farcaster Hub. We access it through getSSLHubRpcClient.
+- **2.** We check the validity of the Request (signeb by user's farecaster account) and retrieve its Farecaster ID
+- **3.** When user clicks en create / retrieve wallet, we check the mongodg database if an account match the Farecaster ID:
+-> **Yes:** we get the matching keypair and feed the private key to a Smart Account
+-> **No:** we create a keypair, store it in the mongodb collection then feed it to a Smart Account
+
+*This can be found in lib/farcaster.ts*
+
+- **4.** Using permissionless.js, we feed the private key into the privateKeyToSafeSmartAccount function
+- **5.** If the account was already created we also feed the safe address
+- **6.** We then prepare, sign and send the safe creation using the Safe 4337 Module
+
+*This can be found in api/account/route.ts*
+
+- **7.** We use the same process for the transaction in the transaction route.
+
+**Thanks to this architechture, we can provide a Safe Smart Account to user without having to use an external wallet, and while keeping security thanks to the trusted signed messages from farcaster. We also don't need users to pay gas, therefore leveraging Paymasters thanks to the Safe 4337 Module**
+
+### TODO
+- Additional testing, trying to attack server and see if Frame signature can be bypassed
+- Improve mongodb security (private key are stored directly on the db which could be dangerous)
+- Deploy our own Farecaster Hub
+- Abstract more the Frame Building to let other builders use our stack
+- Fixing lack of optimization in Frames to improve flow
+- Add an external wallet AAFrame to fund Safe Smart Accounts
 
 ## Contribute
 AAFrame thrives on community contributions. We encourage you to contribute whether it's through new feature development, bug fixes, or improving documentation.
