@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
-  },
+  }, 
   "dependencies": {
     "@coinbase/onchainkit": "^0.4.3",
     "ethers": "^6.11.1",
