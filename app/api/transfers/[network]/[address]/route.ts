@@ -15,25 +15,20 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const segments = req.url.split('/');
     const swapIndex = segments.indexOf('transfers');
     let network;
-    let tokenAddress;
-    if (swapIndex !== -1 && segments.length > swapIndex + 2) {
+    let recipientAddress;
         network = segments[swapIndex + 1];
-        tokenAddress = segments[swapIndex + 2];
-        console.log(`Network: ${network}, Token Address: ${tokenAddress}`);
-    } else {
-        console.log("URL does not contain the expected segments.");
-    }
+        recipientAddress = segments[swapIndex + 2];
     let publicClient;
     let paymasterUrl;
     let bundlerUrl;
-    if (network === 'base') {
+    if (network == 'base') {
         paymasterUrl = `https://api.pimlico.io/v2/84532/rpc?apikey=${apiKey}`
         bundlerUrl = `https://api.pimlico.io/v1/84532/rpc?apikey=${apiKey}`
 
         publicClient = createPublicClient({
 	        transport: http("https://rpc.ankr.com/base_sepolia"),
         })
-    } else if (network === 'arbitrum') {
+    } else if (network == 'arbitrum') {
         paymasterUrl = `https://api.pimlico.io/v2/421614/rpc?apikey=${apiKey}`
         bundlerUrl = `https://api.pimlico.io/v1/421614/rpc?apikey=${apiKey}`
 
@@ -53,7 +48,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     })
     let smartAccountClient;
     let redirect;
-    if (network === 'base') {
+    if (network == 'base') {
         smartAccountClient = createSmartAccountClient({
             account,
             chain: baseSepolia,
@@ -63,7 +58,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             .extend(bundlerActions)
             .extend(pimlicoBundlerActions)
         redirect = `https://sepolia.basescan.org/tx/`
-    } else if (network === 'arbitrum') {
+    } else if (network == 'arbitrum') {
         smartAccountClient = createSmartAccountClient({
             account,
             chain: arbitrumSepolia,
@@ -74,12 +69,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             .extend(pimlicoBundlerActions)
         redirect = `https://sepolia.arbiscan.io/tx/` 
     } 
-    const dynamicPart = tokenAddress!.slice(2); // Remove the '0x' part
     const txHash = await smartAccountClient!.sendTransaction({
-        to: `0x${dynamicPart}`, 
+        to: recipientAddress as Address, 
         value: ethers.parseEther("0.001"),
     });
-    console.log(txHash);
     return new NextResponse(`<!DOCTYPE html><html><head>
     <title>Done</title>
     <meta property="fc:frame" content="vNext" />
