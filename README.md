@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AAFrame: Developer Tooling for Farcaster Frames Integration
+## Usage 
+we've developed a demo use case, but the aim of the project is to be adaptable: anyone can modify the address and network.
+The main frame is https://smart-account-frame-template-projects.vercel.app
+
+Or you can generate a frame for any address on base and arbitrum with the format https://smart-account-frame-template-projects.vercel.app/{network}/{reception_address}
+
+## Overview
+AAFrame is a cutting-edge developer tool designed to facilitate the seamless integration of Account Abstraction into Farcaster and Warpcast Frames. This tool enables developers to embed direct blockchain functionalities such as token sending, swapping, and NFT minting right within social media platforms. AAFrame is built for developers aiming to bridge the gap between blockchain technology and social media user experiences, making blockchain interactions intuitive and integrated within the Warpcast app ecosystem.
+
+## Key Features
+- **Effortless Account Abstraction**: Streamline the integration of blockchain capabilities into your social media applications with minimal setup.
+- **Direct On-Feed Blockchain Interactions**: Enable users to perform blockchain transactions directly within their social media feeds, enhancing engagement and interaction.
+- **Developer-Friendly Setup**: With just an image, an address, and a network, you can create engaging and functional frames for a wide range of blockchain activities.
+- **Scalable and Future-Proof**: Designed with scalability in mind, AAFrame is ready for future expansions, including automatic generation of blockchain interaction codes and more advanced features for user transactions without traditional wallet dependencies.
+
+## Technologies Utilized
+- **Blockchain Integration Modules**: Safe 4337 Module, Safe accounts v1.4.1, Safe SDK, and Protocol Kit.
+- **Development Tools**: Pimlimco Paymaster client, ERC-4337, Smart Account, permissionless.js, and more.
+- **Framework Support**: React components and TypeScript utilities from Onchain Kit, tailored for building immersive Frames.
+- **Data Management**: MongoDB for efficient data handling, including FarcasterID and private key storage.
 
 ## Getting Started
+To leverage AAFrame for your Farcaster Frames projects, follow these steps:
 
-First, run the development server:
+1. Gather your frame's image, blockchain address, and network information.
+2. Refer to the `docs` directory for detailed AAFrame integration instructions.
+3. Utilize the provided React components and TypeScript utilities for Frame development.
+4. Test your Frame within Warpcast to ensure a flawless user experience.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Contribute
+AAFrame thrives on community contributions. We encourage you to contribute whether it's through new feature development, bug fixes, or improving documentation.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Fork the project repository.
+2. Create a feature-specific branch.
+3. Commit and push your changes.
+4. Open a pull request for review.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## License
+AAFrame is open-source software licensed under the [MIT License](LICENSE).
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Acknowledgments
+This project was developed during a hackathon, and we extend our gratitude to all developers, contributors, and organizers involved. Special thanks to the Farcaster and Warpcast communities for their invaluable insights and support.

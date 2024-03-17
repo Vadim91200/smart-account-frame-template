@@ -61,7 +61,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     })
     let smartAccountClient;
     let redirect;
-    if (network === 'base') {
+    if (network == 'base') {
         smartAccountClient = createSmartAccountClient({
             account,
             chain: baseSepolia,
@@ -71,7 +71,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             .extend(bundlerActions)
             .extend(pimlicoBundlerActions)
         redirect = `https://sepolia.basescan.org/address/${account.address}`
-    } else if (network === 'arbitrum') {
+    } else if (network == 'arbitrum') {
         smartAccountClient = createSmartAccountClient({
             account,
             chain: arbitrumSepolia,
