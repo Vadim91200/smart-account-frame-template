@@ -42,18 +42,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         })
     }
     const paymasterClient = createPimlicoPaymasterClient({
-	    transport: http(paymasterUrl),
+	    transport: http(paymasterUrl!),
     })
-    const fid = process.env.NEXT_PUBLIC_MYFID;
     const account = await privateKeyToSafeSmartAccount(publicClient!, {
         privateKey: privateKey as Hash,
         safeVersion: "1.4.1", // simple version
         entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789", // global entrypoint
-        saltNonce: BigInt(fid!)
     })
     let smartAccountClient;
     let redirect;
-    if (network === 'base') {
+    if (network == 'base') {
         smartAccountClient = createSmartAccountClient({
             account,
             chain: baseSepolia,
@@ -63,7 +61,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             .extend(bundlerActions)
             .extend(pimlicoBundlerActions)
         redirect = `https://sepolia.basescan.org/tx/`
-    } else if (network === 'arbitrum') {
+    } else if (network == 'arbitrum') {
         smartAccountClient = createSmartAccountClient({
             account,
             chain: arbitrumSepolia,
