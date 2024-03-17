@@ -1,40 +1,31 @@
-import { FrameRequest, getFrameMessage } from '@coinbase/onchainkit';
+import { FrameRequest } from '@coinbase/onchainkit';
 import { NextRequest, NextResponse } from 'next/server';
-import { privateKeyToSafeSmartAccount } from 'permissionless/accounts';
-import { createPimlicoPaymasterClient } from 'permissionless/clients/pimlico';
-import { Address, Hash, createPublicClient, http } from 'viem';
+import { parseFrameRequest } from '@lib/farcaster';
+import { getAccount } from '@lib/mongodb';
 
-const eprivateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY!;
-const privateKey = '0x' + eprivateKey;
-const apiKey = process.env.PIMLICO_API_KEY!;
-const paymasterUrl = `https://api.pimlico.io/v2/sepolia/rpc?apikey=${apiKey}`
-const bundlerUrl = `https://api.pimlico.io/v1/sepolia/rpc?apikey=${apiKey}`
-
-const publicClient = createPublicClient({
-	transport: http("https://rpc.ankr.com/eth_sepolia"),
-})
- 
-const paymasterClient = createPimlicoPaymasterClient({
-	transport: http(paymasterUrl),
-})
-
+async function getFid(req: NextRequest){
+    let frameRequest: FrameRequest | undefined;
+    try {
+        frameRequest = await req.json();
+        if (!frameRequest) throw new Error('Could not deserialize request from frame');
+    } catch (e) { return null; }
+    const {fid, isValid} = await parseFrameRequest(frameRequest);
+    if (!isValid || !fid) return null;
+    return fid;
+}
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
     const body: FrameRequest = await req.json();
-    const fid = process.env.NEXT_PUBLIC_MYFID;
-
+    const fid = await getFid(req);
     if (!fid) {
-        return new NextResponse('Invalid Frame id', { status: 400 });
+        return new NextResponse("Invalid request", { status: 400 });
     }
-    const account = await privateKeyToSafeSmartAccount(publicClient, {
-        privateKey: privateKey as Hash,
-        safeVersion: "1.4.1", // simple version
-        entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789", // global entrypoint
-        saltNonce: BigInt(fid)
-    })
+
+    const user_account = await getAccount(fid);
+    const userPublicKey = user_account?.account?.publicKey;
 
     return NextResponse.redirect(
-        `https://sepolia.etherscan.io/address/${account.address}`,
+        `https://sepolia.etherscan.io/address/${userPublicKey}`,
         { status: 302 },
     );
 }
