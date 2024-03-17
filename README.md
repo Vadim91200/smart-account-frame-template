@@ -32,21 +32,21 @@ To leverage AAFrame for your Farcaster Frames projects, follow these steps:
 ## Account abstraction with Farcaster ID
 **In the mongo branch**:
 
-**1.** We parse the FrameRequest by accessing it's trusted data thanks to a Farcaster Hub. We access it through getSSLHubRpcClient.
-**2.** We check the validity of the Request (signeb by user's farecaster account) and retrieve its Farecaster ID
-**3.** When user clicks en create / retrieve wallet, we check the mongodg database if an account match the Farecaster ID:
+- **1.** We parse the FrameRequest by accessing it's trusted data thanks to a Farcaster Hub. We access it through getSSLHubRpcClient.
+- **2.** We check the validity of the Request (signeb by user's farecaster account) and retrieve its Farecaster ID
+- **3.** When user clicks en create / retrieve wallet, we check the mongodg database if an account match the Farecaster ID:
 **Yes:** we get the matching keypair and feed the private key to a Smart Account
 **No:** we create a keypair, store it in the mongodb collection then feed it to a Smart Account
 
 *This can be found in lib/farcaster.ts*
 
-**4.** Using permissionless.js, we feed the private key into the privateKeyToSafeSmartAccount function
-**5.** If the account was already created we also feed the safe address
-**6.** We then prepare, sign and send the safe creation using the Safe 4337 Module
+- **4.** Using permissionless.js, we feed the private key into the privateKeyToSafeSmartAccount function
+- **5.** If the account was already created we also feed the safe address
+- **6.** We then prepare, sign and send the safe creation using the Safe 4337 Module
 
 *This can be found in api/account/route.ts*
 
-**7.** We use the same process for the transaction in the transaction route.
+- **7.** We use the same process for the transaction in the transaction route.
 
 **Thanks to this architechture, we can provide a Safe Smart Account to user without having to use an external wallet, and while keeping security thanks to the trusted signed messages from farcaster. We also don't need users to pay gas, therefore leveraging Paymasters thanks to the Safe 4337 Module**
 
