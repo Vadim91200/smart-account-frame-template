@@ -33,7 +33,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         bundlerUrl = `https://api.pimlico.io/v1/421614/rpc?apikey=${apiKey}`
 
         publicClient = createPublicClient({
-	        transport: http("https://rpc.ankr.com/arbitrum_sepolia"),
+	        transport: http("https://arbitrum-sepolia.infura.io/v3/21d658c695324ea4a9005dfa835ba7fc"),
         })
     }
     const paymasterClient = createPimlicoPaymasterClient({
