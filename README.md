@@ -51,7 +51,9 @@ To leverage AAFrame for your Farcaster Frames projects, follow these steps:
 **Thanks to this architechture, we can provide a Safe Smart Account to user without having to use an external wallet, and while keeping security thanks to the trusted signed messages from farcaster. We also don't need users to pay gas, therefore leveraging Paymasters thanks to the Safe 4337 Module**
 
 ### TODO
+- Additional testing, trying to attack server and see if Frame signature can be bypassed
 - Improve mongodb security (private key are stored directly on the db which could be dangerous)
+- Deploy our own Farecaster Hub
 - Abstract more the Frame Building to let other builders use our stack
 - Fixing lack of optimization in Frames to improve flow
 - Add an external wallet AAFrame to fund Safe Smart Accounts
