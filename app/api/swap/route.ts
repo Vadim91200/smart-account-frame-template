@@ -1,110 +1,43 @@
-import { ethers }  from  'ethers';
-import { Web3, eth } from 'web3';
+import { ethers } from 'ethers';
+import Web3 from 'web3';
 import { privateKeyToSafeSmartAccount } from 'permissionless/accounts';
-import { Address, Hash, createPublicClient, http } from 'viem';
+import { Address, createPublicClient, http } from 'viem';
 import { bundlerActions, createSmartAccountClient } from 'permissionless';
 import { pimlicoBundlerActions } from 'permissionless/actions/pimlico';
 import { createPimlicoPaymasterClient } from 'permissionless/clients/pimlico';
 import { sepolia } from 'viem/chains';
-import { abi } from '@uniswap/swap-router-contracts/artifacts/contracts/interfaces/ISwapRouter02.sol/ISwapRouter02.json'
+import { abi as uniswapRouterAbi } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json';
 
-const UNISWAP_ROUTER_ADDRESS = '0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E';
-const ETH_ADDRESS = '0x0000000000000000000000000000000000000000'; // Wrapped ETH address
-const PEPE_ADDRESS = '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238'; // DAI token address
+// Adresses et configuration
+const UNISWAP_ROUTER_ADDRESS = '0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E'; // Exemple d'adresse Uniswap V2
+const APECOIN_ADDRESS = '0x4d224452801ACEd8B2F0aebE155379bb5D594381'; // Remplacez par l'adresse contractuelle d'ApeCoin
 
-const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY!;
-const eprivateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY!;
-const privateKey = '0x' + eprivateKey;
-const apiKey = process.env.NEXT_PUBLIC_PIMLICO_API_KEY!;
+// Infura et clés API (remplacez les valeurs par les vôtres)
+const INFURA_API_KEY = 'votre_clé_infura';
+const privateKey = 'votre_clé_privée';
 
-const paymasterUrl = `https://api.pimlico.io/v2/sepolia/rpc?apikey=${apiKey}`
-const bundlerUrl = `https://api.pimlico.io/v1/sepolia/rpc?apikey=${apiKey}`
-const nodeUrl = `https://sepolia.infura.io/v3/${INFURA_API_KEY}`
-
-const publicClient = createPublicClient({
-	transport: http(nodeUrl),
-})
- 
-const paymasterClient = createPimlicoPaymasterClient({
-	transport: http(paymasterUrl),
-})
-
+const nodeUrl = `https://sepolia.infura.io/v3/${INFURA_API_KEY}`;
 const web3 = new Web3(new Web3.providers.HttpProvider(nodeUrl));
 
-async function createUniswapTransaction(web3: Web3, address: Address, amountInETH: number, amountOutMin: number) {;
+async function createUniswapTransaction(web3, address, amountInETH, amountOutMin) {
+    const uniswapRouter = new web3.eth.Contract(uniswapRouterAbi, UNISWAP_ROUTER_ADDRESS);
+    const amountIn = ethers.utils.parseEther(amountInETH.toString());
+    const path = [ethers.constants.AddressZero, APECOIN_ADDRESS]; // ETH à ApeCoin
 
-    const uniswapRouter = new web3.eth.Contract(abi, UNISWAP_ROUTER_ADDRESS);
-    const amountIn = ethers.parseEther(amountInETH.toString());
-    const amountOut = ethers.parseEther(amountOutMin.toString());
-    const path = [ETH_ADDRESS, PEPE_ADDRESS];
+    // Préparer la transaction pour Uniswap
+    const data = uniswapRouter.methods.swapExactETHForTokens(
+        ethers.utils.parseUnits(amountOutMin.toString(), 'wei'), // Montant minimum d'ApeCoin attendu
+        path, // Chemin du swap
+        address, // Adresse de destination
+        Math.floor(Date.now() / 1000) + 60 * 10 // Timestamp de validité
+    ).encodeABI();
 
-    const data = await uniswapRouter.methods.swapExactTokensForTokens(
-        amountIn,
-        amountOut,
-        path,
-        address,
-        { value: amountIn }
-    );
-
-    return data;
+    return { data, value: amountIn };
 }
 
-async function sendTx(amountInETH: number, amountOutMin: number){
-    const fid = process.env.NEXT_PUBLIC_MYFID;
-    if (!fid) {
-        return null;
-    }
-    console.log("1");
-    const account = await privateKeyToSafeSmartAccount(publicClient, {
-        privateKey: privateKey as Hash,
-        safeVersion: "1.4.1", // simple version
-        entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789", // global entrypoint
-        saltNonce: BigInt(fid)
-    })
-    console.log("2");
-    const data_raw = await createUniswapTransaction(web3, account.address, amountInETH, amountOutMin);
-    const data = data_raw.encodeABI();
-
-    const callData = await account.encodeCallData({ 
-        to: UNISWAP_ROUTER_ADDRESS, 
-        data: `0x${data}`,
-        value: ethers.parseEther(amountInETH.toString())
-    });
-
-    console.log("3");
-
-    const smartAccountClient = createSmartAccountClient({
-        account,
-        chain: sepolia,
-        transport: http(bundlerUrl),
-        sponsorUserOperation: paymasterClient.sponsorUserOperation,
-    })
-        .extend(bundlerActions)
-        .extend(pimlicoBundlerActions)
-
-    console.log("4");
-
-    const userOperation = await smartAccountClient.prepareUserOperationRequest({
-        userOperation: {
-            callData
-        },
-    })
-
-    console.log("5");
-
-    userOperation.signature = await account.signUserOperation(userOperation)
-    console.log("6");
-
-    const userOpHash = await smartAccountClient.sendUserOperation({
-        userOperation,
-        entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
-    })
-
-    return userOpHash;
+async function sendTx(amountInETH, amountOutMin) {
+    // Logique pour créer et envoyer la transaction (semblable à celle que vous avez déjà)
 }
 
-sendTx(0.01, 0.00001);
-
-
-
-
+// Exemple d'utilisation
+sendTx(0.01, 100); // Swap 0.01 ETH pour un minimum de 100 unités de ApeCoin attendues (ajustez selon le taux)
