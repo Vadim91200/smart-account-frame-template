@@ -35,8 +35,8 @@ To leverage AAFrame for your Farcaster Frames projects, follow these steps:
 - **1.** We parse the FrameRequest by accessing it's trusted data thanks to a Farcaster Hub. We access it through getSSLHubRpcClient.
 - **2.** We check the validity of the Request (signeb by user's farecaster account) and retrieve its Farecaster ID
 - **3.** When user clicks en create / retrieve wallet, we check the mongodg database if an account match the Farecaster ID:
-**Yes:** we get the matching keypair and feed the private key to a Smart Account
-**No:** we create a keypair, store it in the mongodb collection then feed it to a Smart Account
+>**Yes:** we get the matching keypair and feed the private key to a Smart Account
+>**No:** we create a keypair, store it in the mongodb collection then feed it to a Smart Account
 
 *This can be found in lib/farcaster.ts*
 
