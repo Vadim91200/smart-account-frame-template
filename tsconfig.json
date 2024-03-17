@@ -18,9 +18,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@lib/*": ["./app/lib/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "app/api/transfers/[network]/[address]/route2.ts"]
 }
